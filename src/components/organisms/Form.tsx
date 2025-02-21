@@ -2,6 +2,7 @@ import { MapPin, Phone, Send, User, Contact2 } from "lucide-react";
 import { useSubmitComplaint } from "../../hooks/useSubmitComplaint";
 import Icon from "../atoms/Icon";
 import { Input } from "../molecules";
+import { Colony } from "../../constants/colony";
 
 export const Form = () => {
   const { handleSubmit, formData, handleInputChange } = useSubmitComplaint();
@@ -39,15 +40,25 @@ export const Form = () => {
             required
             placeholder="Calle, número, CP..."
           />
-          <Input
-            title="Colonia"
-            icon={MapPin}
-            name="colony"
-            value={formData.colony}
-            handleInputChange={handleInputChange}
-            required
-            placeholder="Colonia"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Colonia
+            </label>
+            <select
+              name="colony"
+              value={formData.type}
+              onChange={handleInputChange}
+              className="pl-6 w-full block border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer py-2 h-12"
+              required
+            >
+              <option value="">Selecciona tu colonia</option>
+              {Colony.map((colony, index) => (
+                <option key={index} value={colony.name}>
+                  {colony.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div>
@@ -55,8 +66,8 @@ export const Form = () => {
             Tipo de Reporte
           </label>
           <select
-            name="department"
-            value={formData.department}
+            name="type"
+            value={formData.type}
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
             required
@@ -68,7 +79,7 @@ export const Form = () => {
           </select>
         </div>
 
-        {formData.department === "falta-servicio" && (
+        {formData.type === "falta-servicio" && (
           <Input
             title="Número de Cuenta"
             icon={Contact2}

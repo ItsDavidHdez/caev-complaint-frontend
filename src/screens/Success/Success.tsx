@@ -1,10 +1,10 @@
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import Icon from "../../components/atoms/Icon";
-import { useSubmitComplaint } from "../../hooks/useSubmitComplaint";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export const Success = () => {
-  const { submittedId } = useSubmitComplaint();
+  const [searchParams] = useSearchParams();
+  const consecutiveId = searchParams.get("consecutiveId");
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -23,7 +23,7 @@ export const Success = () => {
         Su queja ha sido registrada con el siguiente ID:
       </p>
       <div className="bg-gray-100 p-4 rounded-lg mb-8">
-        <p className="text-lg font-mono font-semibold">{submittedId}</p>
+        <p className="text-lg font-mono font-semibold">{consecutiveId}</p>
       </div>
       <p className="text-sm text-gray-500 mb-8">
         Guarde este ID para dar seguimiento al estado de su queja.
