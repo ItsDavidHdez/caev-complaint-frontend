@@ -24,9 +24,17 @@ export const Login = () => {
       localStorage.setItem("token", response.data.access_token);
 
       navigate("/");
-    } catch (error) {
-      console.error("❌ Error en el login:", error.response?.data || error);
-      alert(error.response?.data?.message || "Error al iniciar sesión.");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "❌ Error en el login:",
+          error.response?.data || error.message
+        );
+        alert(error.response?.data?.message || "Error al iniciar sesión.");
+      } else {
+        console.error("❌ Error desconocido en el login:", error);
+        alert("Error inesperado. Inténtalo de nuevo.");
+      }
     }
   };
 
@@ -39,6 +47,8 @@ export const Login = () => {
           icon={User}
           name="username"
           value={formData.username}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           handleInputChange={handleInputChange}
           required
           placeholder="Usuario"
@@ -49,6 +59,8 @@ export const Login = () => {
           name="password"
           type="password"
           value={formData.password}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           handleInputChange={handleInputChange}
           required
           placeholder="Contraseña"

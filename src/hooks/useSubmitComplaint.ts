@@ -15,6 +15,9 @@ export const useSubmitComplaint = () => {
     description: "",
   });
 
+  const [searchId, setSearchId] = useState("");
+  const [searchError, setSearchError] = useState<string | null>(null);
+
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -43,11 +46,31 @@ export const useSubmitComplaint = () => {
         description: "",
       });
     } catch (error) {
-      console.log(formData);
       console.error("❌ Error al enviar la queja:", error);
       alert("Hubo un error al enviar la queja. Inténtalo de nuevo.");
     }
   };
 
-  return { handleSubmit, formData, handleInputChange };
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(`${API_URL}/complaints/${searchId}`);
+
+      console.log("🔍 Resultado de búsqueda:", response.data);
+      setSearchError(null);
+    } catch (error) {
+      console.error("❌ Error en la búsqueda:", error);
+      setSearchError("No se encontró la queja con el ID ingresado.");
+    }
+  };
+
+  return {
+    handleSubmit,
+    formData,
+    handleInputChange,
+    handleSearch,
+    searchId,
+    setSearchId,
+    searchError,
+  };
 };

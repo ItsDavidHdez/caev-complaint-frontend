@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../constants/url";
 import { formatDate } from "../../utils/date";
+import { Complaint } from "../../types/complaint.types";
 
 export const ComplaintsList = () => {
-  const [complaints, setComplaints] = useState([]);
+  const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [activeTab, setActiveTab] = useState<
     "Todas" | "Pendiente" | "Completado"
   >("Todas");
@@ -17,11 +18,15 @@ export const ComplaintsList = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setComplaints(response.data);
-      } catch (error) {
-        console.error(
-          "❌ Error al obtener las quejas:",
-          error.response?.data || error
-        );
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error(
+            "❌ Error al obtener las quejas:",
+            error.response?.data || error.message
+          );
+        } else {
+          console.error("❌ Error desconocido:", error);
+        }
       }
     };
 
@@ -44,11 +49,15 @@ export const ComplaintsList = () => {
             : complaint
         )
       );
-    } catch (error) {
-      console.error(
-        "❌ Error al actualizar el estado:",
-        error.response?.data || error
-      );
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "❌ Error al actualizar el estado:",
+          error.response?.data || error.message
+        );
+      } else {
+        console.error("❌ Error desconocido:", error);
+      }
     }
   };
 
@@ -61,7 +70,6 @@ export const ComplaintsList = () => {
     <div className="container mx-auto">
       <h2 className="text-2xl font-semibold mb-4">📋 Lista de Quejas</h2>
 
-      {/* Tabs de navegación */}
       <div className="flex border-b mb-4">
         {["Todas", "Pendiente", "Completado"].map((tab) => (
           <button
