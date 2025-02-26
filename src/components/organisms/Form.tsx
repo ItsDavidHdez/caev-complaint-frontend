@@ -49,7 +49,7 @@ export const Form = () => {
             </label>
             <select
               name="colony"
-              value={formData.type}
+              value={formData.colony}
               onChange={handleInputChange}
               className="pl-6 w-full block border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer py-2 h-12"
               required
