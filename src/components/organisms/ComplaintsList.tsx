@@ -5,9 +5,9 @@ import { formatDate } from "../../utils/date";
 
 export const ComplaintsList = () => {
   const [complaints, setComplaints] = useState([]);
-  const [activeTab, setActiveTab] = useState<"Pendiente" | "Completado">(
-    "Pendiente"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "Todas" | "Pendiente" | "Completado"
+  >("Todas");
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -28,15 +28,42 @@ export const ComplaintsList = () => {
     fetchComplaints();
   }, []);
 
-  const filteredComplaints = complaints.filter(
-    (complaint) => complaint.status === activeTab
-  );
+  const handleUpdateStatus = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `${API_URL}/complaints/${id}`,
+        { status: "Completado" },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setComplaints((prevComplaints) =>
+        prevComplaints.map((complaint) =>
+          complaint._id === id
+            ? { ...complaint, status: "Completado" }
+            : complaint
+        )
+      );
+    } catch (error) {
+      console.error(
+        "❌ Error al actualizar el estado:",
+        error.response?.data || error
+      );
+    }
+  };
+
+  const filteredComplaints =
+    activeTab === "Todas"
+      ? complaints
+      : complaints.filter((complaint) => complaint.status === activeTab);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto">
       <h2 className="text-2xl font-semibold mb-4">📋 Lista de Quejas</h2>
+
+      {/* Tabs de navegación */}
       <div className="flex border-b mb-4">
-        {["Pendiente", "Completado"].map((tab) => (
+        {["Todas", "Pendiente", "Completado"].map((tab) => (
           <button
             key={tab}
             className={`py-2 px-4 font-medium ${
@@ -44,13 +71,15 @@ export const ComplaintsList = () => {
                 ? "border-b-4 border-blue-500 text-blue-500"
                 : "text-gray-500"
             }`}
-            onClick={() => setActiveTab(tab as "Pendiente" | "Completado")}
+            onClick={() =>
+              setActiveTab(tab as "Todas" | "Pendiente" | "Completado")
+            }
           >
             {tab}
           </button>
         ))}
       </div>
-      {/* Tabla de Quejas */}
+
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead className="bg-yellow-400 text-left">
@@ -65,6 +94,7 @@ export const ComplaintsList = () => {
                 OBSERVACIONES
               </th>
               <th className="border border-gray-300 px-4 py-2">STATUS</th>
+              <th className="border border-gray-300 px-4 py-2">ACCIÓN</th>
             </tr>
           </thead>
           <tbody>
@@ -77,7 +107,7 @@ export const ComplaintsList = () => {
                   {formatDate(complaint.date)}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {complaint.account}
+                  {complaint.account || "N/A"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {complaint.name}
@@ -89,7 +119,7 @@ export const ComplaintsList = () => {
                   {complaint.colony}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {complaint.comments}
+                  {complaint.comments || "Sin observaciones"}
                 </td>
                 <td
                   className={`border border-gray-300 px-4 py-2 font-semibold ${
@@ -101,6 +131,16 @@ export const ComplaintsList = () => {
                   {complaint.status === "Pendiente"
                     ? "🟡 Pendiente"
                     : "🟢 Completado"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {complaint.status === "Pendiente" && (
+                    <button
+                      className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                      onClick={() => handleUpdateStatus(complaint._id)}
+                    >
+                      Marcar como Completado
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

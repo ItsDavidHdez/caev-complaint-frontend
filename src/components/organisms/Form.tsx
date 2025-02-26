@@ -20,6 +20,7 @@ export const Form = () => {
             handleInputChange={handleInputChange}
             required
             placeholder="Nombre, apellidos"
+            typeInput="text"
           />
           <Input
             title="Teléfono"
@@ -29,7 +30,8 @@ export const Form = () => {
             handleInputChange={handleInputChange}
             required
             placeholder="7831234567"
-            regex="^\d{1,10}$"
+            regex="^\d+$"
+            typeInput="number"
           />
           <Input
             title="Dirección"
@@ -39,6 +41,7 @@ export const Form = () => {
             handleInputChange={handleInputChange}
             required
             placeholder="Calle, número, CP..."
+            typeInput="text"
           />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

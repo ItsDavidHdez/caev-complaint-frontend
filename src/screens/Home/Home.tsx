@@ -7,7 +7,7 @@ export const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <main className="mx-auto mt-8 px-4 pb-12">
+      <main className="mx-auto mt-8 pb-12">
         {isAuthenticated ? <ComplaintsList /> : <Form />}
       </main>
     </div>

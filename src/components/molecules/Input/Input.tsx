@@ -16,6 +16,7 @@ type Props = {
   placeholder: string;
   required: boolean;
   regex?: string;
+  typeInput?: "text" | "number" | "password" | "checkbox" | "date";
 };
 
 export const Input = ({
@@ -27,6 +28,7 @@ export const Input = ({
   placeholder,
   required,
   regex,
+  typeInput = "text",
 }: Props) => {
   return (
     <div>
@@ -41,7 +43,7 @@ export const Input = ({
           />
         )}
         <input
-          type="text"
+          type={typeInput}
           name={name}
           value={value}
           onChange={handleInputChange}
