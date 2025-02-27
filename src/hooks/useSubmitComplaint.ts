@@ -12,7 +12,7 @@ export const useSubmitComplaint = () => {
     colony: "",
     type: "",
     accountNumber: "",
-    description: "",
+    comments: "",
   });
 
   const [searchId, setSearchId] = useState("");
@@ -43,7 +43,7 @@ export const useSubmitComplaint = () => {
         colony: "",
         type: "",
         accountNumber: "",
-        description: "",
+        comments: "",
       });
     } catch (error) {
       console.error("❌ Error al enviar la queja:", error);
