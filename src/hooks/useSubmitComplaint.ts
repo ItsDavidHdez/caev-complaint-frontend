@@ -47,7 +47,7 @@ export const useSubmitComplaint = () => {
       });
     } catch (error) {
       console.error("❌ Error al enviar la queja:", error);
-      alert("Hubo un error al enviar la queja. Inténtalo de nuevo.");
+      alert(`Error al enviar la queja: ${error}`);
     }
   };
 
