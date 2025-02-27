@@ -1,13 +1,14 @@
-import { Building2 } from "lucide-react";
-import Icon from "../../atoms/Icon";
+import caevImage from "../../../assets/caev-logo.jpg";
+import veracruzImage from "../../../assets/veracruz-logo.jpeg";
 
 export const HeaderLogo = () => {
   return (
     <div className="flex items-center">
-      <Icon className="h-8 w-8 mr-3" icon={Building2} />
+      <img className="mr-6" src={veracruzImage} style={{ width: 100 }} />
+      <img className="mr-8" src={caevImage} style={{ width: 100 }} />
       <div>
         <h1 className="text-2xl font-bold">Sistema de Quejas y Sugerencias</h1>
-        <p className="text-blue-200">CAEV Tuxpan, Veracruz</p>
+        <p>CAEV Tuxpan, Veracruz</p>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ export const Form = () => {
   const { handleSubmit, formData, handleInputChange } = useSubmitComplaint();
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8">
+    <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
       <h2 className="text-2xl font-semibold mb-6">Presentar Nueva Queja</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -111,7 +111,7 @@ export const Form = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-800 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center cursor-pointer"
+          className="w-full bg-blue-800 text-white py-3 px-6 rounded-lg hover:bg-blue-700 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
           onClick={handleSubmit}
