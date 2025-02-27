@@ -99,7 +99,7 @@ export const Form = () => {
             Observaciones
           </label>
           <textarea
-            name="description"
+            name="comments"
             value={formData.comments}
             onChange={handleInputChange}
             rows={4}
