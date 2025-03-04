@@ -8,4 +8,5 @@ export interface Complaint {
   colony: string;
   comments?: string;
   status: "Pendiente" | "Completado";
+  phone: string;
 }

@@ -61,10 +61,11 @@ export const ComplaintsList = () => {
     }
   };
 
-  const filteredComplaints =
-    activeTab === "Todas"
-      ? complaints
-      : complaints.filter((complaint) => complaint.status === activeTab);
+  const filteredComplaints = [...complaints]
+    .filter(
+      (complaint) => activeTab === "Todas" || complaint.status === activeTab
+    )
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <div className="container mx-auto">
@@ -118,7 +119,7 @@ export const ComplaintsList = () => {
                   {complaint.account || "N/A"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {complaint.name}
+                  {complaint.name} - {complaint.phone}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {complaint.address}

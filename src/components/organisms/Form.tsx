@@ -77,6 +77,8 @@ export const Form = () => {
           >
             <option value="">Seleccione el tipo de reporte</option>
             <option value="falta-servicio">Falta de Servicio</option>
+            <option value="fugas">Fugas</option>
+            <option value="calidad-agua">Calidad de agua</option>
             <option value="drenajes">Drenajes</option>
             <option value="varios">Varios</option>
           </select>
