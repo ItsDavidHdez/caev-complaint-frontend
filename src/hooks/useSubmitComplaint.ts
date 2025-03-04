@@ -54,7 +54,11 @@ export const useSubmitComplaint = () => {
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`${API_URL}/complaints/${searchId}`);
+      const encodedSearchId = encodeURIComponent(searchId.trim());
+
+      const response = await axios.get(
+        `${API_URL}/complaints/search/${encodedSearchId}`
+      );
 
       console.log("🔍 Resultado de búsqueda:", response.data);
       setSearchError(null);
