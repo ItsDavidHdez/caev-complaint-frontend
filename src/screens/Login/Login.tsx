@@ -23,7 +23,7 @@ export const Login = () => {
 
       localStorage.setItem("token", response.data.access_token);
 
-      navigate("/");
+      navigate("/complaints");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(
