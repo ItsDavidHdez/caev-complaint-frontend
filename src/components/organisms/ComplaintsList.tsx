@@ -4,6 +4,7 @@ import { API_URL } from "../../constants/url";
 import { formatDate } from "../../utils/date";
 import { Complaint } from "../../types/complaint.types";
 import { Modal } from "../molecules/Modal/Modal";
+import { handleExportExcel } from "../../utils/handleExportExcel";
 
 export const ComplaintsList = () => {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
@@ -79,6 +80,10 @@ export const ComplaintsList = () => {
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  const handleButtonDownloadExcel = () => {
+    handleExportExcel(complaints);
+  };
+
   return (
     <div className="container mx-auto">
       <h2 className="text-2xl font-semibold mb-4">📋 Lista de Quejas</h2>
@@ -115,7 +120,14 @@ export const ComplaintsList = () => {
           <option value="12">Último año</option>
         </select>
       </div>
-
+      {complaints ? (
+        <button
+          onClick={handleButtonDownloadExcel}
+          className="bg-blue-600 mb-3 text-white px-4 py-2 rounded hover:bg-green-700 transition-transform cursor-pointer"
+        >
+          📥 Exportar a Excel
+        </button>
+      ) : null}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead className="bg-yellow-400 text-left">
