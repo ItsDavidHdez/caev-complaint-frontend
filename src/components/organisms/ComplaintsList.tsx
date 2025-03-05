@@ -9,6 +9,7 @@ export const ComplaintsList = () => {
   const [activeTab, setActiveTab] = useState<
     "Todas" | "Pendiente" | "Completado"
   >("Todas");
+  const [dateFilter, setDateFilter] = useState("all");
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -65,6 +66,17 @@ export const ComplaintsList = () => {
     .filter(
       (complaint) => activeTab === "Todas" || complaint.status === activeTab
     )
+    .filter((complaint) => {
+      if (dateFilter === "all") return true;
+
+      const complaintDate = new Date(complaint.date);
+      const today = new Date();
+      const monthsAgo = new Date(
+        today.setMonth(today.getMonth() - parseInt(dateFilter))
+      );
+
+      return complaintDate >= monthsAgo;
+    })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
@@ -87,6 +99,21 @@ export const ComplaintsList = () => {
             {tab}
           </button>
         ))}
+      </div>
+
+      <div className="flex justify-between mb-4">
+        <label className="text-gray-700 font-medium">Filtrar por fecha:</label>
+        <select
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+          className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+        >
+          <option value="all">Todas</option>
+          <option value="1">Último mes</option>
+          <option value="2">Últimos 2 meses</option>
+          <option value="6">Últimos 6 meses</option>
+          <option value="12">Último año</option>
+        </select>
       </div>
 
       <div className="overflow-x-auto">

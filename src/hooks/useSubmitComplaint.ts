@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/url";
 import { useNavigate } from "react-router-dom";
+import { refreshAccessToken } from "../utils/auth";
 
 export const useSubmitComplaint = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export const useSubmitComplaint = () => {
       });
     } catch (error) {
       console.error("❌ Error al enviar la queja:", error);
-      alert(`Error al enviar la queja: ${error}`);
+      alert(`Error al enviar la queja`);
     }
   };
 
@@ -68,6 +69,39 @@ export const useSubmitComplaint = () => {
     }
   };
 
+  const handleProtectedRequest = async (
+    url: string,
+    method: string,
+    data?: any
+  ) => {
+    let token = localStorage.getItem("token");
+
+    try {
+      const response = await axios({
+        method,
+        url,
+        data,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        token = await refreshAccessToken();
+        if (token) {
+          const retryResponse = await axios({
+            method,
+            url,
+            data,
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          return retryResponse.data;
+        }
+      }
+      throw error;
+    }
+  };
+
   return {
     handleSubmit,
     formData,
@@ -76,5 +110,6 @@ export const useSubmitComplaint = () => {
     searchId,
     setSearchId,
     searchError,
+    handleProtectedRequest,
   };
 };
