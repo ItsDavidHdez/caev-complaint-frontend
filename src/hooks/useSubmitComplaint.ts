@@ -85,7 +85,7 @@ export const useSubmitComplaint = () => {
       });
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       if (error.response?.status === 401) {
         token = await refreshAccessToken();
         if (token) {
