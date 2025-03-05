@@ -123,7 +123,7 @@ export const ComplaintsList = () => {
       {complaints ? (
         <button
           onClick={handleButtonDownloadExcel}
-          className="bg-blue-600 mb-3 text-white px-4 py-2 rounded hover:bg-green-700 transition-transform cursor-pointer"
+          className="bg-blue-600 mb-3 text-white px-4 py-2 rounded hover:bg-blue-700 transition-transform cursor-pointer"
         >
           📥 Exportar a Excel
         </button>
