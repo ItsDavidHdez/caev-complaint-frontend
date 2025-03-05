@@ -3,13 +3,18 @@ import axios from "axios";
 import { API_URL } from "../../constants/url";
 import { formatDate } from "../../utils/date";
 import { Complaint } from "../../types/complaint.types";
+import { Modal } from "../molecules/Modal/Modal";
 
 export const ComplaintsList = () => {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "Todas" | "Pendiente" | "Completado"
   >("Todas");
   const [dateFilter, setDateFilter] = useState("all");
+  const [selectedComplaintId, setSelectedComplaintId] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -34,7 +39,9 @@ export const ComplaintsList = () => {
     fetchComplaints();
   }, []);
 
-  const handleUpdateStatus = async (id: string) => {
+  const handleUpdateStatus = async (id: string | null) => {
+    if (!id) return;
+
     try {
       const token = localStorage.getItem("token");
       await axios.put(
@@ -50,15 +57,8 @@ export const ComplaintsList = () => {
             : complaint
         )
       );
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          "❌ Error al actualizar el estado:",
-          error.response?.data || error.message
-        );
-      } else {
-        console.error("❌ Error desconocido:", error);
-      }
+    } catch (error) {
+      console.error("❌ Error al actualizar el estado:", error);
     }
   };
 
@@ -135,50 +135,61 @@ export const ComplaintsList = () => {
           </thead>
           <tbody>
             {filteredComplaints.map((complaint) => (
-              <tr key={complaint._id} className="bg-gray-100">
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.consecutiveId}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {formatDate(complaint.date)}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.account || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.name} - {complaint.phone}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.address}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.colony}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.comments || "Sin observaciones"}
-                </td>
-                <td
-                  className={`border border-gray-300 px-4 py-2 font-semibold ${
-                    complaint.status === "Pendiente"
-                      ? "text-yellow-600"
-                      : "text-green-600"
-                  }`}
-                >
-                  {complaint.status === "Pendiente"
-                    ? "🟡 Pendiente"
-                    : "🟢 Completado"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.status === "Pendiente" && (
-                    <button
-                      className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-                      onClick={() => handleUpdateStatus(complaint._id)}
-                    >
-                      Marcar como Completado
-                    </button>
-                  )}
-                </td>
-              </tr>
+              <>
+                <tr key={complaint._id} className="bg-gray-100">
+                  <td className="border border-gray-300 px-4 py-2">
+                    {complaint.consecutiveId}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {formatDate(complaint.date)}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {complaint.account || "N/A"}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {complaint.name} - {complaint.phone}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {complaint.address}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {complaint.colony}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {complaint.comments || "Sin observaciones"}
+                  </td>
+                  <td
+                    className={`border border-gray-300 px-4 py-2 font-semibold ${
+                      complaint.status === "Pendiente"
+                        ? "text-yellow-600"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {complaint.status === "Pendiente"
+                      ? "🟡 Pendiente"
+                      : "🟢 Completado"}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {complaint.status === "Pendiente" && (
+                      <button
+                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
+                        onClick={() => {
+                          setSelectedComplaintId(complaint._id);
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        Marcar como Completado
+                      </button>
+                    )}
+                  </td>
+                </tr>
+                <Modal
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                  handleUpdateStatus={handleUpdateStatus}
+                  selectedComplaintId={selectedComplaintId}
+                />
+              </>
             ))}
           </tbody>
         </table>
